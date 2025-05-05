@@ -86,11 +86,6 @@ const initMap = () => {
     touchZoomRotate: true
   });
 
-  // 回転が発生したら自動的にリセット（北を上に戻す）
-  map.on('rotate', () => {
-    map.resetNorth(); // bearing（回転）を 0° に戻す
-  });
-
   map.addControl(new maplibregl.NavigationControl(), 'top-right');
   map.addControl(new maplibregl.ScaleControl({ maxWidth: 200, unit: 'metric' }), 'bottom-left');
 
