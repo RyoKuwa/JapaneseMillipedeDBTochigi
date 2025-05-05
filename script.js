@@ -88,11 +88,7 @@ const initMap = () => {
     touchZoomRotate: false,       // 2本指での回転・傾きを無効
     pitchWithRotate: false        // 回転時に傾ける挙動を無効
   });
-
-  // ズームだけ明示的に有効化
-  map.touchZoom.enable();
-  map.touchRotate.disable();
-
+  
   map.addControl(new maplibregl.NavigationControl(), 'top-right');
   map.addControl(new maplibregl.ScaleControl({ maxWidth: 200, unit: 'metric' }), 'bottom-left');
 
