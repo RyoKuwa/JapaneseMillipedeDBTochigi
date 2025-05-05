@@ -83,12 +83,9 @@ const initMap = () => {
     maxZoom: 19,
     minZoom: 3,
     dragPan: !isTouchDevice,
-    bearingSnap: 0,               // 回転スナップを無効にする
-    dragRotate: false,            // マウス右ドラッグによる回転を無効
-    touchZoomRotate: false,       // 2本指での回転・傾きを無効
-    pitchWithRotate: false        // 回転時に傾ける挙動を無効
+    touchZoomRotate: true
   });
-  
+
   map.addControl(new maplibregl.NavigationControl(), 'top-right');
   map.addControl(new maplibregl.ScaleControl({ maxWidth: 200, unit: 'metric' }), 'bottom-left');
 
