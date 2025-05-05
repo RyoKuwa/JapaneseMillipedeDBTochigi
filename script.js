@@ -99,7 +99,7 @@ const initMap = () => {
         }
       ]
     },
-    center: [139.9, 36.7],
+    center: [139.8192, 36.68917],
     zoom: defaultZoom,
     maxZoom: 19,
     minZoom: 3,
