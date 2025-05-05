@@ -57,6 +57,10 @@ const initMap = () => {
           tiles: ['https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
           tileSize: 256,
           attribution: 'Imagery © <a href="https://www.esri.com/en-us/home" target="_blank">Esri</a>'
+        },
+        japan: {
+          type: "geojson",
+          data: "Japan.geojson"
         }
       },
       layers: [
@@ -72,9 +76,26 @@ const initMap = () => {
           id: 'satellite-layer',
           type: 'raster',
           source: 'esri',
-          layout: { visibility: 'none' }, // 初期状態で非表示
+          layout: { visibility: 'none' },
           minzoom: 0,
           maxzoom: 19
+        },
+        {
+          id: 'japan-fill',
+          type: 'fill',
+          source: 'japan',
+          paint: {
+            'fill-color': 'rgba(0, 0, 0, 0)'  // 完全透明
+          }
+        },
+        {
+          id: 'japan-outline',
+          type: 'line',
+          source: 'japan',
+          paint: {
+            'line-color': '#cccccc',
+            'line-width': 1
+          }
         }
       ]
     },
@@ -135,7 +156,6 @@ const initMap = () => {
     });
   }
 
-  // レイヤー切り替えボタンをセットアップ
   const toggleButton = document.getElementById('layer-toggle');
   if (toggleButton) {
     toggleButton.addEventListener('click', () => {
@@ -1602,7 +1622,8 @@ const preparePopupContent = (filteredData) => {
         ${translations[lang]?.original_japanese_name || "文献中の和名"}: ${row.originalJapaneseName || (translations[lang]?.unknown || "不明")}<br>
         ${translations[lang]?.original_scientific_name || "文献中の学名"}: ${row.originalScientificName || (translations[lang]?.unknown || "不明")}<br>
         ${translations[lang]?.page || "ページ"}: ${row.page || (translations[lang]?.unknown || "不明")}<br>
-        ${translations[lang]?.location || "場所"}: ${row.location || (translations[lang]?.unknown || "不明")}<br>
+        ${translations[lang]?.location || "場所"}: ${row.location || (translations[lang]?.unknown || "不明")} 
+        ${(row.latitude && row.longitude) ? `<a href="https://www.google.com/maps?q=${row.latitude},${row.longitude}" target="_blank">[Map]</a>` : ""}<br>
         ${translations[lang]?.population || "個体数"}: ${row.population || (translations[lang]?.unknown || "不明")}<br>
         ${translations[lang]?.collection_date || "採集日"}: ${row.date || (translations[lang]?.unknown || "不明")}<br>
         ${translations[lang]?.collector_jp || "採集者"}: ${row.collectorJp || (translations[lang]?.unknown || "不明")}<br>
