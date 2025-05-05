@@ -39,7 +39,7 @@ let lang = localStorage.getItem("preferredLanguage") || "ja";
 // ==================== 地図の初期設定 ====================
 const initMap = () => {
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  const defaultZoom = window.innerWidth <= 711 ? 7 : 8;
+  const defaultZoom = window.innerWidth <= 711 ? 7.5 : 8.5;
 
   map = new maplibregl.Map({
     container: 'mapid',
