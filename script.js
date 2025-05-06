@@ -68,7 +68,7 @@ const initMap = () => {
           id: 'osm-layer',
           type: 'raster',
           source: 'osm',
-          layout: { visibility: 'visible' },
+          layout: { visibility: 'none' },
           minzoom: 0,
           maxzoom: 19
         },
@@ -76,7 +76,7 @@ const initMap = () => {
           id: 'satellite-layer',
           type: 'raster',
           source: 'esri',
-          layout: { visibility: 'none' },
+          layout: { visibility: 'visible' },
           minzoom: 0,
           maxzoom: 19
         },
