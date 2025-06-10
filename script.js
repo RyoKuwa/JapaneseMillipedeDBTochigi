@@ -231,7 +231,7 @@ const loadLiteratureCSV = async () => {
       let inQuotes = false;
       for (let char of line) {
         if (char === '"' && !inQuotes) {
-          inQuotes = true; 
+          inQuotes = true;
         } else if (char === '"' && inQuotes) {
           inQuotes = false;
         } else if (char === "," && !inQuotes) {
@@ -243,10 +243,9 @@ const loadLiteratureCSV = async () => {
       }
       if (current) columns.push(current.trim());
 
-      // 新: Lnumber, LID_CSV, LitList_en, LitList_jp, Link の順
-      const [lnumber, id, litList_en, litList_jp, link] = columns;
+      // 新: Lnumber, LID_CSV, LitList_en, LitList_jp, Link, DriveLink の順
+      const [lnumber, id, litList_en, litList_jp, link, driveLink] = columns;
 
-      // 数値変換できなかった場合に備えて，lnumber はパース失敗時 index を使う
       const lnum = parseInt(lnumber, 10);
       literatureArray.push({
         lnumber: isNaN(lnum) ? index : lnum,
@@ -254,8 +253,7 @@ const loadLiteratureCSV = async () => {
         label_jp: (litList_jp || "").trim(),
         label_en: (litList_en || "").trim(),
         link: link ? link.trim() : null,
-        // 旧コードで "order" と呼んでいたものは無理に入れなくてもOK
-        // 必要なら lnumber を兼用してソート順を使う
+        driveLink: driveLink ? driveLink.trim() : null,
       });
     });
   } catch (error) {
@@ -933,7 +931,8 @@ const getLiteratureInfo = (literatureID) => {
     // 見つからないときのフォールバック
     return {
       literatureName: (lang === "en") ? "Unknown" : "不明",
-      literatureLink: null
+      literatureLink: null,
+      driveLink: null
     };
   }
 
@@ -942,7 +941,8 @@ const getLiteratureInfo = (literatureID) => {
 
   return {
     literatureName: name,
-    literatureLink: item.link || null
+    literatureLink: item.link || null,
+    driveLink: item.driveLink || null
   };
 };
 
@@ -1594,7 +1594,7 @@ const preparePopupContent = (filteredData) => {
 
   const popupContents = filteredData.map(row => {
     if (!row.latitude || !row.longitude) return null;
-    const { literatureName, literatureLink } = getLiteratureInfo(row.literatureID);
+    const { literatureName, literatureLink, driveLink } = getLiteratureInfo(row.literatureID);
     const recordType = recordTypeMapping[row.recordType] || (translations[lang]?.unknown || "不明");
 
     let titleLine = (lang === "en")
@@ -1627,10 +1627,11 @@ const preparePopupContent = (filteredData) => {
         ${translations[lang]?.population || "個体数"}: ${row.population || (translations[lang]?.unknown || "不明")}<br>
         ${translations[lang]?.collection_date || "採集日"}: ${row.date || (translations[lang]?.unknown || "不明")}<br>
         ${translations[lang]?.collector_jp || "採集者"}: ${row.collectorJp || (translations[lang]?.unknown || "不明")}<br>
-        ${translations[lang]?.collector_en || "collector"}: ${row.collectorEn || (translations[lang]?.unknown || "不明")}<br><br>
-        ${translations[lang]?.literature || "文献"}: ${literatureName} ${
-          literatureLink ? `<a href="${literatureLink}" target="_blank">${literatureLink}</a>` : ""
-        }<br><br>
+        ${translations[lang]?.collector_en || "collector"}: ${row.collectorEn || (translations[lang]?.unknown || "不明")}
+        ${(row.note && row.note.trim() !== "-") ? `<br>${translations[lang]?.note || "備考"}: ${row.note}` : ""}<br><br>
+        ${translations[lang]?.literature || "文献"}: ${literatureName}
+        ${driveLink ? `<a href="${driveLink}" target="_blank">[Drive]</a>` : ""}
+        ${literatureLink ? `<a href="${literatureLink}" target="_blank">${literatureLink}</a>` : ""}<br><br>
       `;
 
       if (row.registrant && row.registrationDate) {
